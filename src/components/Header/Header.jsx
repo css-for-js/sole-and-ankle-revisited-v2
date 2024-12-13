@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import * as Dialog from '@radix-ui/react-dialog';
 
 import { COLORS, QUERIES, WEIGHTS } from '../../constants';
 import Logo from '../Logo';
@@ -10,48 +11,49 @@ import MobileMenu from '../MobileMenu';
 import VisuallyHidden from '../VisuallyHidden';
 
 const Header = () => {
-  const [showMobileMenu, setShowMobileMenu] = React.useState(false);
-
+  // NOTE: I’ve removed the state hook for `isMobileMenuOpen` because Radix’s Dialog manages its own internal state. We have specialized components (Dialog.Trigger and Dialog.Close) to handle opening and closing the menu.
+  // It is also possible to use Radix’s Dialog component in a *controlled* fashion, using its `open` and `onOpenChange` props. This is sometimes useful if we want to be able to toggle the menu based on some unrelated user action (eg. completing a purchase, joining a newsletter). In this particular case, however, we don’t have any special requirements, so we can leave the Dialog component uncontrolled.
   return (
-    <header>
-      <SuperHeader />
-      <MainHeader>
-        <LogoWrapper>
-          <Logo />
-        </LogoWrapper>
+    <Dialog.Root>
+      <header>
+        <SuperHeader />
+        <MainHeader>
+          <LogoWrapper>
+            <Logo />
+          </LogoWrapper>
 
-        <DesktopNav>
-          <NavLink href="/sale">Sale</NavLink>
-          <NavLink href="/new">New&nbsp;Releases</NavLink>
-          <NavLink href="/men">Men</NavLink>
-          <NavLink href="/women">Women</NavLink>
-          <NavLink href="/kids">Kids</NavLink>
-          <NavLink href="/collections">Collections</NavLink>
-        </DesktopNav>
+          <DesktopNav>
+            <NavLink href="/sale">Sale</NavLink>
+            <NavLink href="/new">New&nbsp;Releases</NavLink>
+            <NavLink href="/men">Men</NavLink>
+            <NavLink href="/women">Women</NavLink>
+            <NavLink href="/kids">Kids</NavLink>
+            <NavLink href="/collections">Collections</NavLink>
+          </DesktopNav>
 
-        <MobileActions>
-          <ShoppingBagButton>
-            <Icon id="shopping-bag" />
-            <VisuallyHidden>Open cart</VisuallyHidden>
-          </ShoppingBagButton>
-          <UnstyledButton>
-            <Icon id="search" />
-            <VisuallyHidden>Search</VisuallyHidden>
-          </UnstyledButton>
-          <UnstyledButton>
-            <Icon id="menu" />
-            <VisuallyHidden>Open menu</VisuallyHidden>
-          </UnstyledButton>
-        </MobileActions>
+          <MobileActions>
+            <ShoppingBagButton>
+              <Icon id="shopping-bag" />
+              <VisuallyHidden>Open cart</VisuallyHidden>
+            </ShoppingBagButton>
+            <UnstyledButton>
+              <Icon id="search" />
+              <VisuallyHidden>Search</VisuallyHidden>
+            </UnstyledButton>
+            <Dialog.Trigger asChild>
+              <UnstyledButton>
+                <Icon id="menu" />
+                <VisuallyHidden>Open menu</VisuallyHidden>
+              </UnstyledButton>
+            </Dialog.Trigger>
+          </MobileActions>
 
-        <Filler />
-      </MainHeader>
+          <Filler />
+        </MainHeader>
 
-      <MobileMenu
-        isOpen={showMobileMenu}
-        onDismiss={() => setShowMobileMenu(false)}
-      />
-    </header>
+        <MobileMenu />
+      </header>
+    </Dialog.Root>
   );
 };
 
